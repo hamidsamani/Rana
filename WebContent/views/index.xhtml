@@ -1,0 +1,18 @@
+
+<ui:composition template="static/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="content">
+		<p:panel styleClass="boxed-panel" header="بخش مدیریت">
+			<h:link value="مدیریت نوع خدمات" outcome="admin/settings" />
+		</p:panel>
+		<p:panel styleClass="boxed-panel" header="بخش کاربری">
+			<h:link value="صدور فاکتور" outcome="client/invoice" />
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

@@ -3,24 +3,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core" dir="rtl" lang="fa">
 
 <h:head>
+	<title><ui:insert name="title">#{msg['title']}</ui:insert></title>
 	<h:outputStylesheet library="style" name="style.css" />
 </h:head>
 <h:body>
 	<div id="wrapper">
-		<div>
+		<div style="margin: 5px 0 5px 0;">
 			<ui:insert name="header">
 				<ui:include src="header.xhtml"></ui:include>
 			</ui:insert>
 		</div>
-		<div>
+		<div style="margin: 5px 0 5px 0;">
+			<ui:insert name="menu"></ui:insert>
+		</div>
+		<div style="margin: 5px 0 5px 0;">
 			<ui:insert name="content">content</ui:insert>
 		</div>
-		<div>
+		<div style="margin: 5px 0 5px 0;">
 			<ui:insert name="footer">Footer</ui:insert>
 		</div>
 	</div>
+	<h:outputScript library="script" name="script.js"></h:outputScript>
 </h:body>
 </html>
