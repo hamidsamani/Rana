@@ -1,3 +1,18 @@
+.boxed-panel {
+	display: inline-block;
+	margin: 20px;
+	width: 300px;
+	margin: 20px;
+}
+
+.ui-panelgrid-cell {
+	border: none !important;
+}
+
+.ui-panelgrid tr {
+	border: none !important;
+}
+
 #wrapper {
 	margin: 0 auto;
 	width: 960px;
