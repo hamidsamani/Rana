@@ -1,3 +1,13 @@
+@font-face {
+	font-family: Droid;
+	src: local(DroidNaskh.ttf);
+}
+
+.ui-widget {
+	font-family: Droid;
+	font-size: 12px;
+}
+
 .boxed-panel {
 	display: inline-block;
 	margin: 20px;

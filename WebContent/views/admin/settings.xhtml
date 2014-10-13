@@ -1,0 +1,95 @@
+<ui:composition template="../static/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="menu">
+		<p:breadCrumb>
+			<p:menuitem value="صفحه اصلی" url="../index.xhtml" />
+			<p:menuitem value="تنظیمات" url="#" />
+		</p:breadCrumb>
+	</ui:define>
+	<ui:define name="content">
+
+		<f:event listener="#{servicesSettings.preRenderView}"
+			type="preRenderView" />
+
+		<div id="sidebar" style="display: inline-block; float: right;">
+			<p:menu>
+				<p:submenu label="مدیریت خدمات">
+					<p:menuitem value="اضافه کردن" onclick="handleVisibility('add')"
+						url="#" ajax="false" />
+					<p:menuitem value="ویرایش" onclick="handleVisibility('edit')"
+						url="#" ajax="false" />
+					<p:menuitem value="حذف" onclick="handleVisibility('remove')"
+						url="#" ajax="false" />
+				</p:submenu>
+			</p:menu>
+		</div>
+		<div id="content" style="display: inline-block; margin-right: 10px;">
+			<div id="add-service">
+				<p:panel header="اضافه کردن خدمات">
+					<h:form>
+						<p:messages id="msg" />
+						<p:panelGrid columns="2">
+							<h:outputText value="نوع خدمات" />
+							<p:inputText value="#{servicesSettings.name}" required="true"
+								requiredMessage="نوع خدمات وارد نشده است" />
+
+							<h:outputText value="مبلغ" />
+							<pe:inputNumber value="#{servicesSettings.price}"
+								thousandSeparator="," decimalPlaces="0" minValue="0"
+								required="true" requiredMessage="مبلغ وارد نشده است" />
+
+							<p:commandButton value="ثبت" icon="ui-icon-disk"
+								action="#{servicesSettings.addNewService}" update="msg" />
+						</p:panelGrid>
+					</h:form>
+				</p:panel>
+			</div>
+			<div id="edit-service">
+				<p:panel header="ویرایش خدمات">
+					<h:form>
+						<p:panelGrid columns="2">
+							<h:outputText value="نوع خدمات" />
+
+							<p:selectOneMenu id="servives-menu"
+								value="#{servicesSettings.selectedServiceAsString}">
+								<f:selectItem itemLabel="      " />
+								<f:selectItems value="#{servicesSettings.allServices}"
+									var="serv" itemLabel="#{serv.name}" itemValue="#{serv.name}" />
+								<p:ajax listener="#{servicesSettings.serviceChange}"
+									update="@form" />
+							</p:selectOneMenu>
+
+							<h:outputText value="نوع خدمات" />
+							<p:inputText value="#{servicesSettings.selectedService.name}" />
+							<h:outputText value="تعرفه" />
+							<pe:inputNumber thousandSeparator="," decimalPlaces="0"
+								value="#{servicesSettings.selectedService.price}" />
+							<p:commandButton value="ثبت" icon="ui-icon ui-icon-disk"
+								iconPos="right" action="#{servicesSettings.editSelectedService}" />
+							<p:commandButton value="حذف"
+								action="#{servicesSettings.deleteSelectedService}"
+								update="servives-menu" />
+						</p:panelGrid>
+					</h:form>
+				</p:panel>
+			</div>
+			<div id="remove-service">
+				<p:panel header="حذف خدمات">
+					<h:form>
+						<p:panelGrid columns="2">
+							<h:outputText value="نوع خدمات" />
+							<p:selectOneMenu />
+							<h:outputText value="تعرفه" />
+							<pe:inputNumber thousandSeparator="," decimalPlaces="0" />
+						</p:panelGrid>
+					</h:form>
+				</p:panel>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

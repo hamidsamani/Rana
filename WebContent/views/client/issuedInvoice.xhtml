@@ -1,0 +1,40 @@
+<ui:composition template="../static/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+
+		<p:panelGrid columns="1" style="text-align: center; margin:0 auto;">
+			<h:outputText value="خدمات ثبتی رانا" />
+			<h:outputText style="font-family:droid;"
+				value="ثبت شرکت، تمدید، تغییرات، تایید صلاحیت، رتبه‌بندی با مهندس مرتبط" />
+			<h:outputText
+				value="کارت بازرگانی، اخذ گواهینامه‌های بین المللی HSE - ISO - HACCEP - TS29001" />
+		</p:panelGrid>
+		<h:form>
+			<p:panelGrid columns="2">
+				<h:outputText value="شماره فاکتور:" />
+				<h:outputText value="##" />
+				<h:outputText value="تاریخ" />
+				<h:outputText value="##" />
+				<h:outputText value="صورتحساب آقا/خانم:" />
+				<h:outputText value="##" />
+
+			</p:panelGrid>
+		</h:form>
+		<h:form>
+			<p:dataTable>
+				<p:column headerText="ردیف">
+				</p:column>
+				<p:column headerText="نوع خدمات">
+				</p:column>
+				<p:column headerText="مبلغ">
+				</p:column>
+				<p:column headerText="توضیحات"></p:column>
+			</p:dataTable>
+		</h:form>
+		<hr />
+	</ui:define>
+</ui:composition>

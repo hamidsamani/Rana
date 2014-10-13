@@ -1,0 +1,94 @@
+<ui:composition template="../static/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:define name="title">صدور فاکتور</ui:define>
+	<ui:define name="menu">
+		<p:breadCrumb>
+			<p:menuitem value="صفحه اصلی" url="../index.xhtml" />
+			<p:menuitem value="صدور فاکتور" url="#" />
+		</p:breadCrumb>
+	</ui:define>
+	<ui:define name="content">
+		<ui:debug />
+		<p:fieldset legend="فاکتور">
+			<h:form prependId="false">
+
+				<p:growl id="growl" />
+				<p:panel header="مشخصات فردی">
+					<p:panelGrid columns="2">
+						<h:outputText value="#{msg.name}" />
+						<p:inputText value="#{invoiceForm.name}" />
+						<h:outputText value="#{msg.tell}" />
+						<p:inputText value="#{invoiceForm.tell}" />
+					</p:panelGrid>
+				</p:panel>
+				<p:spacer />
+
+				<p:panelGrid columns="2">
+					<h:outputText value="نوع خدمات" />
+
+					<p:selectOneMenu id="selected-Service"
+						value="#{invoiceForm.selectedServiceAsString}">
+						<f:selectItem itemLabel="---نوع خدمات را انتخاب کنید---" />
+						<f:selectItems value="#{invoiceForm.services}" var="service"
+							itemLabel="#{service.name}" itemValue="#{service.name}" />
+
+						<p:ajax update="amount" listener="#{invoiceForm.serviceChange}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="تعرفه" />
+					<h:outputText id="amount"
+						value="#{invoiceForm.selectedService.price}" />
+					<h:outputText value="توضیحات" />
+					<p:inputTextarea id="description"
+						value="#{invoiceForm.description}" />
+					<p:commandButton icon="ui-icon-plus" style="margin:10px 0 10px 0;"
+						process="@this selected-Service description"
+						actionListener="#{invoiceForm.addRow}" update="@form" />
+				</p:panelGrid>
+				<p:dataTable id="dataTable" value="#{invoiceForm.selectedServices}"
+					var="service"
+					emptyMessage="از منوی بالا جهت اضافه کردن خدمات استفاده کنید">
+					<f:facet name="header">
+					خدمات
+					</f:facet>
+					<p:column headerText="نوع خدمات">
+						<h:outputText value="#{service.name}" />
+					</p:column>
+					<p:column headerText="مبلغ">
+						<h:outputText value="#{service.price}" />
+					</p:column>
+					<p:column headerText="توضیحات">
+						<h:outputText value="#{service.description}" />
+
+					</p:column>
+					<p:column headerText="حذف" width="45">
+						<p:commandButton icon="ui-icon-minus"
+							actionListener="#{invoiceForm.removeRow(service)}" update="@form" />
+					</p:column>
+				</p:dataTable>
+
+				<p:panelGrid id="result" columns="2">
+
+					<h:outputText value="جمع کل" />
+					<h:outputText id="total" value="#{invoiceForm.total}" />
+
+					<h:outputText value="مبلغ ودیعه" />
+					<pe:inputNumber thousandSeparator="," decimalPlaces="0"
+						value="#{invoiceForm.deposit}">
+						<p:ajax listener="#{invoiceForm.depositChange}" update="@form" />
+					</pe:inputNumber>
+
+					<h:outputText value="باقیمانده" />
+					<h:outputText value="#{invoiceForm.residual}" />
+					<p:commandButton value="ثبت نهایی فاکتور" ajax="false"
+						action="#{invoiceForm.createInvoice}" update="growl" />
+				</p:panelGrid>
+			</h:form>
+		</p:fieldset>
+	</ui:define>
+</ui:composition>
