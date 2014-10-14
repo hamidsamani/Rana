@@ -2,13 +2,14 @@ package info.rayan.form;
 
 import info.rayan.domains.Invoice;
 import info.rayan.domains.Invoice.InvoiceBuilder;
-import info.rayan.domains.util.ServiceToOrderConverter;
 import info.rayan.domains.OrderItem;
 import info.rayan.domains.Service;
+import info.rayan.domains.util.ServiceToOrderConverter;
+import info.rayan.service.AmountCalculator;
 import info.rayan.service.InvoiceService;
 import info.rayan.service.ServicesService;
+import info.rayan.util.FacesMessageBuilder;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,9 @@ import org.omnifaces.cdi.ViewScoped;
 
 @Named
 @ViewScoped
-public class InvoiceForm implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class InvoiceForm extends GeneralForm {
+
+	private static final long serialVersionUID = 6186965279333488586L;
 
 	@Inject
 	private InvoiceService invoiceService;
@@ -41,6 +43,7 @@ public class InvoiceForm implements Serializable {
 	// monetary infos
 	private BigDecimal total = BigDecimal.ZERO;
 	private BigDecimal deposit = BigDecimal.ZERO;
+	private BigDecimal discount = BigDecimal.ZERO;
 	private BigDecimal residual;
 
 	private List<OrderItem> selectedServices = new ArrayList<>();
@@ -127,6 +130,14 @@ public class InvoiceForm implements Serializable {
 		return description;
 	}
 
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -135,11 +146,12 @@ public class InvoiceForm implements Serializable {
 	 * dataTable
 	 */
 	public void addRow() {
-		System.out.println(selectedService + "  " + description);
 		if (selectedService != null) {
 			selectedServices.add(ServiceToOrderConverter
 					.serviceToOrderItemConverter(selectedService, description));
-			calculateTotalAmount();
+			calculateFinalAmount();
+			calculateTotal();
+
 		}
 	}
 
@@ -153,21 +165,40 @@ public class InvoiceForm implements Serializable {
 		if (selectedServices.contains(service)) {
 			selectedServices.remove(service);
 		}
-		calculateTotalAmount();
+		calculateFinalAmount();
+		calculateTotal();
+	}
+
+	public void depositChange() {
+		if (selectedServicesIsValid()) {
+			calculateFinalAmount();
+		}
+	}
+
+	public void discountChange() {
+		if (selectedServicesIsValid()) {
+			calculateFinalAmount();
+		}
 	}
 
 	/**
 	 * updates the total amount in the case of adding row or deleting
 	 */
-	private void calculateTotalAmount() {
-		total = BigDecimal.ZERO;
-		for (OrderItem service : selectedServices) {
-			total = total.add(service.getPrice());
-		}
+	private void calculateFinalAmount() {
+		final AmountCalculator calculator = new AmountCalculator();
+
+		calculator.setServices(selectedServices);
+		calculator.setDeposit(deposit);
+		calculator.setDiscount(discount);
+
+		residual = calculator.calculateAmount();
 	}
 
-	public void depositChange() {
-		residual = total.subtract(deposit);
+	private void calculateTotal() {
+		final AmountCalculator calculator = new AmountCalculator();
+
+		calculator.setServices(selectedServices);
+		total = calculator.calculateAmount();
 	}
 
 	/**
@@ -177,10 +208,23 @@ public class InvoiceForm implements Serializable {
 	 */
 
 	public String createInvoice() {
+		if (!selectedServicesIsValid()) {
+			getFacesContext().addMessage(
+					null,
+					FacesMessageBuilder.create("خدماتی اضافه نشده است.")
+							.build());
+			return null;
+		}
 		Invoice invoice = InvoiceBuilder.create().customerName(name)
 				.customerTell(tell).orderItems(selectedServices).build();
-		invoiceService.save(invoice);
-		return null;
+		Invoice saved = invoiceService.save(invoice);
+		getFacesContext().getExternalContext().getFlash().put("name", "hamid");
+		return String
+				.format("issuedInvoice?faces-redirect=true", saved.getId());
+	}
+
+	private boolean selectedServicesIsValid() {
+		return !selectedServices.isEmpty();
 	}
 
 	public void serviceChange() {
