@@ -218,9 +218,9 @@ public class InvoiceForm extends GeneralForm {
 		Invoice invoice = InvoiceBuilder.create().customerName(name)
 				.customerTell(tell).orderItems(selectedServices).build();
 		Invoice saved = invoiceService.save(invoice);
-		getFacesContext().getExternalContext().getFlash().put("name", "hamid");
-		return String
-				.format("issuedInvoice?faces-redirect=true", saved.getId());
+
+		putOnFlash("id", saved.getId());
+		return redirect("issuedInvoice");
 	}
 
 	private boolean selectedServicesIsValid() {

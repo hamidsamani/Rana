@@ -1,6 +1,6 @@
 package info.rayan.service;
 
-
+import info.rayan.domain.exception.InvoiceNotFountException;
 import info.rayan.domains.Invoice;
 
 import javax.ejb.LocalBean;
@@ -14,6 +14,8 @@ import javax.persistence.PersistenceContext;
 @Stateless
 @LocalBean
 public class InvoiceService {
+	private static final String INVOIVE_NOT_FOUND = "Invoice with given id=%d not found.";
+
 	@PersistenceContext(unitName = "rana")
 	private EntityManager entityManager;
 
@@ -23,8 +25,20 @@ public class InvoiceService {
 	public InvoiceService() {
 	}
 
-	public void save(Invoice invoice) {
-		entityManager.persist(invoice);
+	public Invoice findOne(long id) {
+		Invoice invoice = entityManager.find(Invoice.class, id);
+		if (invoice == null) {
+			throw new InvoiceNotFountException(String.format(INVOIVE_NOT_FOUND,
+					id));
+		}
+		return invoice;
 	}
 
+	public Invoice save(Invoice invoice) {
+		if (invoice.getId() == 0) {
+			entityManager.persist(invoice);
+			return invoice;
+		}
+		return entityManager.merge(invoice);
+	}
 }
