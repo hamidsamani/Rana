@@ -41,10 +41,11 @@ public class InvoiceForm extends GeneralForm {
 	private String description;
 
 	// monetary infos
-	private BigDecimal total = BigDecimal.ZERO;
 	private BigDecimal deposit = BigDecimal.ZERO;
 	private BigDecimal discount = BigDecimal.ZERO;
-	private BigDecimal residual;
+
+	private String total;
+	private String residual;
 
 	private List<OrderItem> selectedServices = new ArrayList<>();
 
@@ -78,12 +79,8 @@ public class InvoiceForm extends GeneralForm {
 		this.selectedServices = orderItems;
 	}
 
-	public BigDecimal getTotal() {
+	public String getTotal() {
 		return total;
-	}
-
-	public void setTotal(BigDecimal total) {
-		this.total = total;
 	}
 
 	public BigDecimal getDeposit() {
@@ -94,12 +91,8 @@ public class InvoiceForm extends GeneralForm {
 		this.deposit = deposit;
 	}
 
-	public BigDecimal getResidual() {
+	public String getResidual() {
 		return residual;
-	}
-
-	public void setResidual(BigDecimal residual) {
-		this.residual = residual;
 	}
 
 	public List<Service> getServices() {
@@ -185,20 +178,15 @@ public class InvoiceForm extends GeneralForm {
 	 * updates the total amount in the case of adding row or deleting
 	 */
 	private void calculateFinalAmount() {
-		final AmountCalculator calculator = new AmountCalculator();
+		residual = new AmountCalculator(selectedServices, discount, deposit)
+				.calculateAmountWithDefaultValueAdded();
 
-		calculator.setServices(selectedServices);
-		calculator.setDeposit(deposit);
-		calculator.setDiscount(discount);
-
-		residual = calculator.calculateAmount();
 	}
 
 	private void calculateTotal() {
-		final AmountCalculator calculator = new AmountCalculator();
+		total = new AmountCalculator(selectedServices)
+				.calculateAmountWithDefaultValueAdded();
 
-		calculator.setServices(selectedServices);
-		total = calculator.calculateAmount();
 	}
 
 	/**
@@ -220,7 +208,7 @@ public class InvoiceForm extends GeneralForm {
 		Invoice saved = invoiceService.save(invoice);
 
 		putOnFlash("id", saved.getId());
-		return redirect("issuedInvoice");
+		return navigateTo("issuedInvoice");
 	}
 
 	private boolean selectedServicesIsValid() {
