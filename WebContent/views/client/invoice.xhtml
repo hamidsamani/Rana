@@ -21,7 +21,8 @@
 				<p:panel header="مشخصات فردی">
 					<p:panelGrid columns="2">
 						<h:outputText value="#{msg.name}" />
-						<p:inputText value="#{invoiceForm.name}" />
+						<p:inputText value="#{invoiceForm.name}" required="true"
+							requiredMessage="نام وارد تشده است" />
 						<h:outputText value="#{msg.tell}" />
 						<p:inputText value="#{invoiceForm.tell}" />
 					</p:panelGrid>
@@ -42,13 +43,16 @@
 
 					<h:outputText value="تعرفه" />
 					<h:outputText id="amount"
-						value="#{invoiceForm.selectedService.price}" />
+						value="#{invoiceForm.selectedService.price}"
+						converter="bigDecimalFormatter" />
+
 					<h:outputText value="توضیحات" />
 					<p:inputTextarea id="description"
 						value="#{invoiceForm.description}" />
+
 					<p:commandButton icon="ui-icon-plus" style="margin:10px 0 10px 0;"
-						process="@this selected-Service description"
-						actionListener="#{invoiceForm.addRow}" update="@form" />
+						process="selected-Service description"
+						actionListener="#{invoiceForm.addRow}" update="dataTable total" />
 				</p:panelGrid>
 				<p:dataTable id="dataTable" value="#{invoiceForm.selectedServices}"
 					var="service"
@@ -60,35 +64,44 @@
 						<h:outputText value="#{service.name}" />
 					</p:column>
 					<p:column headerText="مبلغ">
-						<h:outputText value="#{service.price}" />
+						<h:outputText value="#{service.price}"
+							converter="bigDecimalFormatter" />
 					</p:column>
 					<p:column headerText="توضیحات">
 						<h:outputText value="#{service.description}" />
 
 					</p:column>
 					<p:column headerText="حذف" width="45">
-						<p:commandButton icon="ui-icon-minus"
-							actionListener="#{invoiceForm.removeRow(service)}" update="@form" />
+						<p:commandButton icon="ui-icon-minus" update="@form"
+							actionListener="#{invoiceForm.removeRow(service)}" />
 					</p:column>
 				</p:dataTable>
 
 				<p:panelGrid id="result" columns="2">
 
-					<h:outputText value="جمع کل" />
+					<h:outputText value="جمع کل با احتساب ۸٪ ارزش افزوده:" />
 					<h:outputText id="total" value="#{invoiceForm.total}" />
 
-					<h:outputText value="مبلغ ودیعه" />
-					<pe:inputNumber thousandSeparator="," decimalPlaces="0"
-						value="#{invoiceForm.deposit}">
-						<p:ajax listener="#{invoiceForm.depositChange}" update="@form" />
+					<h:outputText value="تخفیف:" />
+					<pe:inputNumber id="discount" thousandSeparator=","
+						decimalPlaces="0" value="#{invoiceForm.discount}">
+						<p:ajax listener="#{invoiceForm.depositChange}" update="residual"></p:ajax>
 					</pe:inputNumber>
 
-					<h:outputText value="باقیمانده" />
-					<h:outputText value="#{invoiceForm.residual}" />
-					<p:commandButton value="ثبت نهایی فاکتور" ajax="false"
+					<h:outputText value="مبلغ ودیعه:" />
+					<pe:inputNumber thousandSeparator="," decimalPlaces="0"
+						value="#{invoiceForm.deposit}">
+						<p:ajax listener="#{invoiceForm.discountChange}" update="residual" />
+					</pe:inputNumber>
+
+					<h:outputText value="باقیمانده:" />
+					<h:outputText id="residual" value="#{invoiceForm.residual}" />
+
+					<p:commandButton value="ثبت نهایی فاکتور"
 						action="#{invoiceForm.createInvoice}" update="growl" />
 				</p:panelGrid>
 			</h:form>
 		</p:fieldset>
+
 	</ui:define>
 </ui:composition>
