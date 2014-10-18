@@ -9,11 +9,12 @@
 	<ui:define name="content">
 		<p:panel styleClass="boxed-panel" header="بخش مدیریت">
 			<h:link value="مدیریت نوع خدمات" outcome="admin/settings" />
+			<br />
 		</p:panel>
 		<p:panel styleClass="boxed-panel" header="بخش کاربری">
 			<h:link value="صدور فاکتور" outcome="client/invoice" />
 			<br />
-			<h:link value="گزارش فاکتورهای صادر شده" />
+			<h:link value="گزارش فاکتورهای صادر شده" outcome="client/invoices" />
 		</p:panel>
 
 	</ui:define>

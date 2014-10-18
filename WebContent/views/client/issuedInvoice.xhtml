@@ -16,23 +16,29 @@
 		<h:form>
 			<p:panelGrid columns="2">
 				<h:outputText value="شماره فاکتور:" />
-				<h:outputText value="##" />
+				<h:outputText value="#{issuedInvoiceForm.invoice.id}" />
 				<h:outputText value="تاریخ" />
-				<h:outputText value="##" />
+				<h:outputText value="#{issuedInvoiceForm.invoice.createdDate}" />
 				<h:outputText value="صورتحساب آقا/خانم:" />
-				<h:outputText value="##" />
+				<h:outputText
+					value="#{issuedInvoiceForm.invoice.customer.name} #{issuedInvoiceForm.invoice.customer.tell}" />
 
 			</p:panelGrid>
 		</h:form>
 		<h:form>
-			<p:dataTable>
+			<p:dataTable value="#{issuedInvoiceForm.invoice.orderItems}"
+				var="orderItem">
 				<p:column headerText="ردیف">
 				</p:column>
 				<p:column headerText="نوع خدمات">
+					<h:outputText value="#{orderItem.name}" />
 				</p:column>
-				<p:column headerText="مبلغ">
+				<p:column headerText="مبلغ" >
+					<h:outputText value="#{orderItem.price}" />
 				</p:column>
-				<p:column headerText="توضیحات"></p:column>
+				<p:column headerText="توضیحات">
+					<h:outputText value="#{orderItem.description}" />
+				</p:column>
 			</p:dataTable>
 		</h:form>
 		<hr />

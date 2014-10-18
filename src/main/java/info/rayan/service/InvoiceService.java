@@ -1,12 +1,17 @@
 package info.rayan.service;
 
-import info.rayan.domain.exception.InvoiceNotFountException;
 import info.rayan.domains.Invoice;
+import info.rayan.domains.exception.InvoiceNotFountException;
+
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * Session Bean implementation class InvoiceService
@@ -34,11 +39,27 @@ public class InvoiceService {
 		return invoice;
 	}
 
+	// TODO correct the N+1 problem in retrieving objects.
+	public List<Invoice> findByNameLike(String name) {
+
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Invoice> cq = cb.createQuery(Invoice.class);
+		Root<Invoice> root = cq.from(Invoice.class);
+		//		Join<Invoice, OrderItem> join = root.join("orderItems");
+		cq.where(cb.like(root.get("customer").get("name"),
+				decorateLikeExpression(name)));
+		return entityManager.createQuery(cq).getResultList();
+	}
+
 	public Invoice save(Invoice invoice) {
 		if (invoice.getId() == 0) {
 			entityManager.persist(invoice);
 			return invoice;
 		}
 		return entityManager.merge(invoice);
+	}
+
+	private String decorateLikeExpression(String value) {
+		return String.format("%%%s%%", value);
 	}
 }

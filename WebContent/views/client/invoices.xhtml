@@ -1,0 +1,32 @@
+<ui:composition template="../static/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="content">
+
+		<p:panel styleClass="boxed-panel"
+			header="جستجوی فاکتور بر اساس شماره فاکتور">
+			<h:form>
+				<p:panelGrid columns="2">
+					<h:outputText value="شماره فاکتور" />
+					<p:inputText value="#{invoiceFinderForm.invoiceId}" />
+					<p:commandButton value="جستجو" icon="ui-icon-search"
+						action="#{invoiceFinderForm.findInvoiceById}" />
+				</p:panelGrid>
+			</h:form>
+		</p:panel>
+		<p:panel styleClass="boxed-panel"
+			header="جستجوی فاکتور بر اساس نام خانوادگی">
+			<h:form>
+				<p:panelGrid columns="2">
+					<h:outputText value="نام خانوادگی" />
+					<p:inputText value="#{invoiceFinderForm.name}" />
+					<p:commandButton value="جستجو" icon="ui-icon-search"
+						action="#{invoiceFinderForm.findInvoiceByName}" />
+				</p:panelGrid>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>
