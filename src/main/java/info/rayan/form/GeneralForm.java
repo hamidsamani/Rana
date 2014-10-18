@@ -33,6 +33,19 @@ public abstract class GeneralForm implements Serializable {
 		getFacesContext().addMessage(null, new FacesMessage(summary));
 	}
 
+	protected String getRequestParameterValue(String key) {
+		return getFacesContext().getExternalContext().getRequestParameterMap()
+				.get(key);
+	}
+
+	protected boolean isRequestParametersContain(String key) {
+		return getRequestParameterValue(key) != null;
+	}
+
+	protected boolean isParameterOnFlash(String key) {
+		return getFromFlash(key) != null;
+	}
+
 	private Flash getFlash() {
 		return getFacesContext().getExternalContext().getFlash();
 	}
