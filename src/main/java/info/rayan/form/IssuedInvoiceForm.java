@@ -4,13 +4,12 @@ import info.rayan.domains.Invoice;
 import info.rayan.service.InvoiceService;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.omnifaces.cdi.ViewScoped;
-
 @Named
-@ViewScoped
+@RequestScoped
 public class IssuedInvoiceForm extends GeneralForm {
 
 	private static final long serialVersionUID = 2671603694117379866L;

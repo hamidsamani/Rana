@@ -2,21 +2,24 @@ package info.rayan.form;
 
 import info.rayan.domains.Service;
 import info.rayan.service.ServicesService;
+import info.rayan.util.FacesMessageBuilder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.omnifaces.cdi.ViewScoped;
+
 @Named
-@SessionScoped
-public class ServicesSettings implements Serializable {
+@ViewScoped
+public class ServicesSettings extends GeneralForm implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private static final String SUCESSFULLY_ADDED = "سرویس با موفقیت اضافه شد.";
 
 	@Inject
 	private ServicesService servicesService;
@@ -74,7 +77,7 @@ public class ServicesSettings implements Serializable {
 	 * called in the case of requesting settings.xhtml view.
 	 */
 	public void preRenderView() {
-		if (!FacesContext.getCurrentInstance().isPostback()) {
+		if (!isPostback()) {
 			allServices = servicesService.findAll();
 		}
 	}
@@ -88,6 +91,10 @@ public class ServicesSettings implements Serializable {
 
 	public void addNewService() {
 		servicesService.save(new Service(name, price, null));
+		
+		getFacesContext().addMessage("growl",
+				FacesMessageBuilder.create(SUCESSFULLY_ADDED).build());
+
 	}
 
 	public void editSelectedService() {
