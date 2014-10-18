@@ -21,9 +21,8 @@ public class IssuedInvoiceForm extends GeneralForm {
 
 	@PostConstruct
 	public void setUp() {
-		if (null != getFromFlash("id")) {
-			invoice = invoiceService.findOne((long) getFromFlash("id"));
-		}
+		invoice = invoiceService.findOne(determineIdParameter());
+
 	}
 
 	public Invoice getInvoice() {
@@ -34,4 +33,10 @@ public class IssuedInvoiceForm extends GeneralForm {
 		this.invoice = invoice;
 	}
 
+	private long determineIdParameter() {
+		if (isRequestParametersContain("id")) {
+			return Long.valueOf(getRequestParameterValue("id"));
+		}
+		return (long) getFromFlash("id");
+	}
 }
