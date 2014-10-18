@@ -28,6 +28,8 @@ public class Invoice {
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<OrderItem> orderItems = new ArrayList<>();
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<Payment> payments = new ArrayList<>();
 
 	@Temporal(value = TemporalType.TIMESTAMP)
 	private Date createdDate;
@@ -39,6 +41,7 @@ public class Invoice {
 		this.customer = builder.customer;
 		this.orderItems = builder.orderItems;
 		this.createdDate = builder.createdDate;
+		this.payments = builder.payments;
 	}
 
 	public long getId() {
@@ -73,10 +76,18 @@ public class Invoice {
 		this.createdDate = createdDate;
 	}
 
+	public List<Payment> getPayments() {
+		return payments;
+	}
+
+	public void setPayments(List<Payment> payments) {
+		this.payments = payments;
+	}
+
 	@Override
 	public String toString() {
 		return "Invoice [id=" + id + ", customer=" + customer + ", orderItems="
-				+ orderItems + "]";
+				+ orderItems + ", payments=" + payments + "]";
 	}
 
 	public BigDecimal calculatePrice() {
@@ -87,10 +98,33 @@ public class Invoice {
 		return total;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Invoice other = (Invoice) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
 	public static class InvoiceBuilder {
 		private Customer customer = new Customer();
 		private Date createdDate = new Date();
 		private List<OrderItem> orderItems;
+		private List<Payment> payments;
 
 		public static InvoiceBuilder create() {
 			return new InvoiceBuilder();
@@ -108,6 +142,11 @@ public class Invoice {
 
 		public InvoiceBuilder orderItems(List<OrderItem> orderItems) {
 			this.orderItems = orderItems;
+			return this;
+		}
+
+		public InvoiceBuilder payments(List<Payment> payments) {
+			this.payments = payments;
 			return this;
 		}
 
