@@ -1,4 +1,4 @@
-package info.rayan.domain.exception;
+package info.rayan.domains.exception;
 
 public class InvoiceNotFountException extends RuntimeException {
 
