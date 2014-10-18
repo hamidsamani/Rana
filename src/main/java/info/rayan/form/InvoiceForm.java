@@ -1,14 +1,11 @@
 package info.rayan.form;
 
-import info.rayan.domains.Invoice;
-import info.rayan.domains.Invoice.InvoiceBuilder;
 import info.rayan.domains.OrderItem;
 import info.rayan.domains.Service;
 import info.rayan.domains.util.ServiceToOrderConverter;
+import info.rayan.form.util.InvoiceBuilderForm;
 import info.rayan.service.AmountCalculator;
-import info.rayan.service.InvoiceService;
 import info.rayan.service.ServicesService;
-import info.rayan.util.FacesMessageBuilder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,7 +24,7 @@ public class InvoiceForm extends GeneralForm {
 	private static final long serialVersionUID = 6186965279333488586L;
 
 	@Inject
-	private InvoiceService invoiceService;
+	private InvoiceBuilderForm builderForm;
 
 	@Inject
 	private ServicesService servicesService;
@@ -196,18 +193,12 @@ public class InvoiceForm extends GeneralForm {
 	 */
 
 	public String createInvoice() {
+		
 		if (!selectedServicesIsValid()) {
-			getFacesContext().addMessage(
-					null,
-					FacesMessageBuilder.create("خدماتی اضافه نشده است.")
-							.build());
+			addMessage("خدماتی اضافه نشده است.");
 			return null;
 		}
-		Invoice invoice = InvoiceBuilder.create().customerName(name)
-				.customerTell(tell).orderItems(selectedServices).build();
-		Invoice saved = invoiceService.save(invoice);
-
-		putOnFlash("id", saved.getId());
+		putOnFlash("id", builderForm.createInvoice(name, tell, selectedServices).getId());
 		return navigateTo("issuedInvoice");
 	}
 
