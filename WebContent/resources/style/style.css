@@ -11,8 +11,7 @@
 .boxed-panel {
 	display: inline-block;
 	margin: 20px;
-	width: 300px;
-	margin: 20px;
+	width: 45%;
 }
 
 .ui-panelgrid-cell {
@@ -24,6 +23,8 @@
 }
 
 #wrapper {
+	border: 1px solid black;
 	margin: 0 auto;
 	width: 960px;
+	margin: 0 auto;
 }
