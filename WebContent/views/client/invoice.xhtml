@@ -72,7 +72,7 @@
 
 					</p:column>
 					<p:column headerText="حذف" width="45">
-						<p:commandButton icon="ui-icon-minus" update="@form"
+						<p:commandButton icon="ui-icon-minus" process="@this" update="@form"
 							actionListener="#{invoiceForm.removeRow(service)}" />
 					</p:column>
 				</p:dataTable>
