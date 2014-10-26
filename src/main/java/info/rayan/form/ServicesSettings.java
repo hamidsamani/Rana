@@ -5,9 +5,11 @@ import info.rayan.service.ServicesService;
 import info.rayan.util.FacesMessageBuilder;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
+import javax.annotation.PreDestroy;
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -26,7 +28,7 @@ public class ServicesSettings extends GeneralForm implements Serializable {
 
 	// properties to add a new service
 	private String name;
-	private BigDecimal price;
+	private BigInteger price;
 
 	// properties to edit services
 	private Service selectedService;
@@ -41,11 +43,11 @@ public class ServicesSettings extends GeneralForm implements Serializable {
 		this.name = name;
 	}
 
-	public BigDecimal getPrice() {
+	public BigInteger getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(BigInteger price) {
 		this.price = price;
 	}
 
@@ -90,10 +92,13 @@ public class ServicesSettings extends GeneralForm implements Serializable {
 	}
 
 	public void addNewService() {
-		servicesService.save(new Service(name, price, null));
-		
-		getFacesContext().addMessage("growl",
-				FacesMessageBuilder.create(SUCESSFULLY_ADDED).build());
+		try {
+			servicesService.save(new Service(name, price, null));
+			getFacesContext().addMessage("growl",
+					FacesMessageBuilder.create(SUCESSFULLY_ADDED).build());
+		} catch (EJBException ex) {
+			System.out.println(ex.getCausedByException());
+		}
 
 	}
 
@@ -109,5 +114,10 @@ public class ServicesSettings extends GeneralForm implements Serializable {
 		servicesService.remove(selectedService);
 		allServices.remove(selectedService);
 
+	}
+
+	@PreDestroy
+	public void preDestroy() {
+		System.out.println("pre destroy called");
 	}
 }

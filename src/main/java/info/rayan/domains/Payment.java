@@ -1,7 +1,6 @@
 package info.rayan.domains;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,18 +9,16 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Embeddable
-public class Payment implements Serializable {
+public class Payment {
 
 	public enum PaymentType {
-		AMOUNT, DEPOSIT
+		AMOUNT, DEPOSIT, DISCOUNT
 	}
-
-	private static final long serialVersionUID = -3035430556373104801L;
 
 	public Payment() {
 	}
 
-	public Payment(BigDecimal price, PaymentType type) {
+	public Payment(BigInteger price, PaymentType type) {
 		this.price = price;
 		this.type = type;
 		this.createdDate = new Date();
@@ -31,7 +28,7 @@ public class Payment implements Serializable {
 	private Date createdDate;
 
 	@Column(nullable = false, name = "PRICE")
-	private BigDecimal price;
+	private BigInteger price;
 
 	@Column(name = "TYPE")
 	private PaymentType type;
@@ -44,11 +41,11 @@ public class Payment implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public BigDecimal getPrice() {
+	public BigInteger getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(BigInteger price) {
 		this.price = price;
 	}
 

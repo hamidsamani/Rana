@@ -7,7 +7,7 @@ import info.rayan.form.util.InvoiceBuilderForm;
 import info.rayan.service.AmountCalculator;
 import info.rayan.service.ServicesService;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +38,11 @@ public class InvoiceForm extends GeneralForm {
 	private String description;
 
 	// monetary infos
-	private BigDecimal deposit = BigDecimal.ZERO;
-	private BigDecimal discount = BigDecimal.ZERO;
+	private BigInteger deposit = BigInteger.ZERO;
+	private BigInteger discount = BigInteger.ZERO;
 
-	private String total;
-	private String residual;
+	private BigInteger total;
+	private BigInteger residual;
 
 	private List<OrderItem> selectedServices = new ArrayList<>();
 
@@ -76,19 +76,19 @@ public class InvoiceForm extends GeneralForm {
 		this.selectedServices = orderItems;
 	}
 
-	public String getTotal() {
+	public BigInteger getTotal() {
 		return total;
 	}
 
-	public BigDecimal getDeposit() {
+	public BigInteger getDeposit() {
 		return deposit;
 	}
 
-	public void setDeposit(BigDecimal deposit) {
+	public void setDeposit(BigInteger deposit) {
 		this.deposit = deposit;
 	}
 
-	public String getResidual() {
+	public BigInteger getResidual() {
 		return residual;
 	}
 
@@ -120,11 +120,11 @@ public class InvoiceForm extends GeneralForm {
 		return description;
 	}
 
-	public BigDecimal getDiscount() {
+	public BigInteger getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(BigDecimal discount) {
+	public void setDiscount(BigInteger discount) {
 		this.discount = discount;
 	}
 
@@ -193,12 +193,15 @@ public class InvoiceForm extends GeneralForm {
 	 */
 
 	public String createInvoice() {
-		
+
 		if (!selectedServicesIsValid()) {
 			addMessage("خدماتی اضافه نشده است.");
 			return null;
 		}
-		putOnFlash("id", builderForm.createInvoice(name, tell, selectedServices).getId());
+		putOnFlash(
+				"id",
+				builderForm.createInvoice(name, tell, selectedServices,
+						discount, deposit).getId());
 		return navigateTo("issuedInvoice");
 	}
 

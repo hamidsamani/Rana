@@ -1,6 +1,6 @@
 package info.rayan.domains;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,14 +18,14 @@ public class Service {
 	private String name;
 
 	@Column(name = "PRICE")
-	private BigDecimal price;
+	private BigInteger price;
 
 	private String description;
 
 	public Service() {
 	}
 
-	public Service(String name, BigDecimal price, String description) {
+	public Service(String name, BigInteger price, String description) {
 		this.name = name;
 		this.price = price;
 		this.description = description;
@@ -47,11 +47,11 @@ public class Service {
 		this.name = name;
 	}
 
-	public BigDecimal getPrice() {
+	public BigInteger getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(BigInteger price) {
 		this.price = price;
 	}
 

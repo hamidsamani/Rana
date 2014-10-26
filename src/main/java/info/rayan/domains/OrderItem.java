@@ -1,19 +1,19 @@
 package info.rayan.domains;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
 public class OrderItem {
 	private String name;
-	private BigDecimal price = BigDecimal.ZERO;
+	private BigInteger price = BigInteger.ZERO;
 	private String description;
 
 	public OrderItem() {
 	}
 
-	public OrderItem(String name, BigDecimal price, String description) {
+	public OrderItem(String name, BigInteger price, String description) {
 		this.name = name;
 		this.price = price;
 		this.description = description;
@@ -27,11 +27,11 @@ public class OrderItem {
 		this.name = name;
 	}
 
-	public BigDecimal getPrice() {
+	public BigInteger getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(BigInteger price) {
 		this.price = price;
 	}
 

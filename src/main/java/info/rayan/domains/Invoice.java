@@ -1,6 +1,6 @@
 package info.rayan.domains;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,8 +90,8 @@ public class Invoice {
 				+ orderItems + ", payments=" + payments + "]";
 	}
 
-	public BigDecimal calculatePrice() {
-		BigDecimal total = BigDecimal.ZERO;
+	public BigInteger calculatePrice() {
+		BigInteger total = BigInteger.ZERO;
 		for (OrderItem orderItem : orderItems) {
 			total = total.add(orderItem.getPrice());
 		}
